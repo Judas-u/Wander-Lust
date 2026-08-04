@@ -1,5 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
+  require("dns").setServers(["8.8.8.8", "1.1.1.1"]);
 }
 
 const express = require("express");
@@ -22,6 +23,11 @@ const reviewRouter = require("./routes/reviews");
 const userRouter = require("./routes/user");
 
 const dbUrl = process.env.ATLASDB_URL;
+
+// Prevent a transient Mongo connection error (e.g. DNS/SRV lookup failure) from crashing the whole process
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+});
 
 // Connect to MongoDB
 async function main() {
