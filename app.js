@@ -45,6 +45,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Default locals so views never crash if session/passport fail before reaching them (e.g. DB unreachable)
+app.use((req, res, next) => {
+  res.locals.success = [];
+  res.locals.error = [];
+  res.locals.currUser = null;
+  next();
+});
+
 // Session Config
 const store = MongoStore.create({
   mongoUrl: dbUrl,
