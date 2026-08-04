@@ -22,7 +22,7 @@ router
             failureRedirect: "/login",
             failureFlash: true,
         }),
-        wrapAsync(userController.login)
+        userController.login
     );
 
 // Logout route
